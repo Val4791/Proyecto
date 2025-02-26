@@ -354,7 +354,7 @@ if selected_page == "Analítica":
         
         ("Media de Finalización y Disparo por Edad",
         lambda ax: (
-        ax.set_title("Comparación de Media de Finalización y Disparo por Edad", fontsize=12, color='white'),
+        ax.set_title("Media de Finalización y Disparo por Edad", fontsize=12, color='white'),
         sns.lineplot(
         x=filtered_df_ana.groupby('age')['finishing'].mean().index,
         y=filtered_df_ana.groupby('age')['finishing'].mean().values,
