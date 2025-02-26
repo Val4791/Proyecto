@@ -352,7 +352,7 @@ if selected_page == "Analítica":
         )
         )),
         
-        ("Comparación de Media de Finalización y Disparo por Edad",
+        ("Media de Finalización y Disparo por Edad",
         lambda ax: (
         ax.set_title("Comparación de Media de Finalización y Disparo por Edad", fontsize=12, color='white'),
         sns.lineplot(
