@@ -486,11 +486,10 @@ if selected_page == "Analítica":
                             ax.title.set_color('white')
 
                             try:
-                                # 🔹 Título en blanco y centrado antes del gráfico
-                                st.markdown(f"<h4 style='color: white; text-align: center;'>{titulo}</h4>", unsafe_allow_html=True)
-                                
+                                # 🔹 Título en blanco y centrado antes del gráfic
+                                st.markdown(f"<h4 style='color: white; text-align: center;'>{titulo}</h4>", unsafe_allow_html=True)
                                 plot_func(ax)
-                                st.pyplot(fig)
+                                st.pyplot(fig)
                                 
                             except Exception as e:
                                 st.error(f"No se pudo generar el gráfico: {str(e)}")
@@ -595,9 +594,8 @@ elif selected_page == "Jugadores":
                             ax.title.set_color('white')
                             try:
                             
-                                # 🔹 Título en blanco y centrado antes del gráfico
-                                st.markdown(f"<h4 style='color: white; text-align: center;'>{titulo}</h4>", unsafe_allow_html=True)
-
+                                # 🔹 Título en blanco y centrado antes del gráfic
+                                st.markdown(f"<h4 style='color: white; text-align: center;'>{titulo}</h4>", unsafe_allow_html=True)
                                 funcion(ax)
                                 st.pyplot(fig)
                                 
