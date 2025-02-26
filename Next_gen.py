@@ -534,6 +534,7 @@ if selected_page == "Analítica":
         marker='o', color='blue', ax=ax
         )
         )),
+        ],
         }
 
         # Mostrar los gráficos según la categoría
