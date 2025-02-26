@@ -895,15 +895,15 @@ elif selected_page == "Recomendador":
             (df_skills['age'].between(age_range[0], age_range[1])) &
             (df_skills['height'].between(height_range[0], height_range[1]))
         ]
-
+            
         if "Todos" not in position_options:
-            filtered_similar_players = filtered_similar_players[df_skills['position'].isin(position_options)]
+            filtered_similar_players = filtered_similar_players[filtered_similar_players['position'].isin(position_options)]
         if "Todos" not in nationality_options:
-            filtered_similar_players = filtered_similar_players[df_skills['nationality'].isin(nationality_options)]
+            filtered_similar_players = filtered_similar_players[filtered_similar_players['nationality'].isin(nationality_options)]
         if preferred_foot == "Izquierda":
-            filtered_similar_players = filtered_similar_players[df_skills['preferred_foot'] == 0]
+            filtered_similar_players = filtered_similar_players[filtered_similar_players['preferred_foot'] == 0]
         elif preferred_foot == "Derecha":
-            filtered_similar_players = filtered_similar_players[df_skills['preferred_foot'] == 1]
+            filtered_similar_players = filtered_similar_players[filtered_similar_players['preferred_foot'] == 1]
 
         if filtered_similar_players.empty:
             st.warning("No hay jugadores recomendados para el rango seleccionado.")
