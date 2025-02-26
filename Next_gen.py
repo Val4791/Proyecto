@@ -607,39 +607,206 @@ elif selected_page == "Jugadores":
         # Estilo de gráficos - already set globally
         plt.style.use('dark_background')
 
-        categorias_jugadores = { 
-            "Minutos y Partidos Jugados": [
-                ("Histograma de Partidos Jugados", lambda ax: sns.histplot(filtered_df_ana_jugadores['matches'], kde=True, color='blue', ax=ax) or ax.set(title="Histograma de Partidos Jugados", xlabel="Número de Partidos", ylabel="Número de Jugadores")),
-                ("Promedio de Minutos Jugados por Edad", lambda ax: sns.lineplot(x=filtered_df_ana_jugadores.groupby('age')['minutes'].mean().index, y=filtered_df_ana_jugadores.groupby('age')['minutes'].mean().values, marker='o', color='darkorange', ax=ax) or ax.set(title="Promedio de Minutos Jugados por Edad", xlabel="Edad", ylabel="Minutos Jugados")),
-            ],
-
-            "Distribución de Jugadores": [
-                ("Distribución de Posiciones", lambda ax: sns.countplot(data=filtered_df_ana_jugadores, x='position', order=filtered_df_ana_jugadores['position'].value_counts().index, palette='Reds', ax=ax) or ax.set(title="Distribución de Posiciones", xlabel="Posición", ylabel="Frecuencia") or ax.set_xticklabels(ax.get_xticklabels(), rotation=45)),
-                ("Distribución de Formaciones", lambda ax: sns.countplot(data=filtered_df_ana_jugadores, x='formation', order=filtered_df_ana_jugadores['formation'].value_counts().index, palette='PuBuGn', ax=ax) or ax.set(title="Distribución de Formaciones", xlabel="Formación", ylabel="Frecuencia") or ax.set_xticklabels(ax.get_xticklabels(), rotation=45)),
-                ("Top 15 Número de Jugadores por País", lambda ax: sns.barplot(y=filtered_df_ana_jugadores['nation'].value_counts().head(15).index, x=filtered_df_ana_jugadores['nation'].value_counts().head(15).values, color='blue', ax=ax) or ax.set(title="Número de Jugadores por País", xlabel="Número de Jugadores", ylabel="País") or ax.set_yticklabels(ax.get_yticklabels(), fontsize=6)),
-            ],
-
-            "Goles y Asistencias": [
-                ("Histograma de Goles por Posición", lambda ax: sns.histplot(data=filtered_df_ana_jugadores, x='goals', hue='position', bins=20, alpha=0.7, ax=ax) or ax.set(title="Histograma de Goles por Posición", xlabel="Número de Goles", ylabel="Frecuencia")),
-                ("Histograma de Asistencias por Posición", lambda ax: sns.histplot(data=filtered_df_ana_jugadores, x='assists', hue='position', bins=20, alpha=0.7, ax=ax) or ax.set(title="Histograma de Asistencias por Posición", xlabel="Número de Asistencias", ylabel="Frecuencia")),
-                ("Distribución de Asistencias", lambda ax: sns.histplot(filtered_df_ana_jugadores['assists'], kde=True, color='red', bins=20, ax=ax) or ax.set(title="Distribución de Asistencias", xlabel="Número de Asistencias", ylabel="Número de Jugadores")),
-                ("Asistencias por Posición", lambda ax: sns.barplot(x=filtered_df_ana_jugadores.groupby('position')['assists'].mean().index, y=filtered_df_ana_jugadores.groupby('position')['assists'].mean().values, color='orange', ax=ax) or ax.set(title="Asistencias por Posición", xlabel="Posición", ylabel="Asistencias")),
-                ("Goles por Posición", lambda ax: sns.barplot(x=filtered_df_ana_jugadores.groupby('position')['goals'].mean().index, y=filtered_df_ana_jugadores.groupby('position')['goals'].mean().values, color='blue', ax=ax) or ax.set(title="Goles por Posición", xlabel="Posición", ylabel="Goles")),
-            ],
-
-            "Disciplina: Tarjetas y Faltas": [
-                ("Histograma de Tarjetas Amarillas por Posición", lambda ax: sns.histplot(data=filtered_df_ana_jugadores, x='yellow_cards', hue='position', bins=20, alpha=0.7, ax=ax) or ax.set(title="Histograma de Tarjetas Amarillas", xlabel="Número de Tarjetas", ylabel="Frecuencia")),
-                ("Histograma de Tarjetas Rojas por Posición", lambda ax: sns.histplot(data=filtered_df_ana_jugadores, x='red_cards', hue='position', bins=20, alpha=0.7, ax=ax) or ax.set(title="Histograma de Tarjetas Rojas", xlabel="Número de Tarjetas", ylabel="Frecuencia")),
-                ("Tarjetas Rojas por Posición", lambda ax: sns.barplot(x=filtered_df_ana_jugadores.groupby('position')['red_cards'].mean().index, y=filtered_df_ana_jugadores.groupby('position')['red_cards'].mean().values, color='red', ax=ax) or ax.set(title="Tarjetas Rojas por Posición", xlabel="Posición", ylabel="Tarjetas Rojas")),
-                ("Tarjetas Amarillas por Posición", lambda ax: sns.barplot(x=filtered_df_ana_jugadores.groupby('position')['yellow_cards'].mean().index, y=filtered_df_ana_jugadores.groupby('position')['yellow_cards'].mean().values, color='gold', ax=ax) or ax.set(title="Tarjetas Amarillas por Posición", xlabel="Posición", ylabel="Tarjetas Amarillas")),
-            ],
-
-            "Análisis y Correlaciones": [
-                ("Mapa de Calor de Correlaciones Generales", lambda ax: sns.heatmap(filtered_df_ana_jugadores.corr(numeric_only=True), annot=True, fmt='.1f', cmap='RdBu', annot_kws={"size": 4}, ax=ax) or ax.set(title="Mapa de Calor de Correlaciones Generales")),
-                ("Mapa de Calor de Expected Goals y Expected Assists", lambda ax: sns.heatmap(filtered_df_ana_jugadores[['goals', 'assists', 'expected_goals', 'expected_assists']].corr(), annot=True, fmt='.1f', cmap='RdBu', annot_kws={"size": 6}, ax=ax) or ax.set(title="Mapa de Calor de xG y xA")),
-                ("Scatterplot: Goles vs Expected Goals (xG)", lambda ax: sns.scatterplot(x=filtered_df_ana_jugadores['expected_goals'], y=filtered_df_ana_jugadores['goals'], hue=filtered_df_ana_jugadores['goals'] - filtered_df_ana_jugadores['expected_goals'], palette='coolwarm', s=30, ax=ax) or ax.set(title="Goles vs Expected Goals (xG)", xlabel="Goles Esperados (xG)", ylabel="Goles")),
-                ("Scatterplot: Asistencias vs Expected Asistencias (xA)", lambda ax: sns.scatterplot(x=filtered_df_ana_jugadores['expected_assists'], y=filtered_df_ana_jugadores['assists'], hue=filtered_df_ana_jugadores['assists'] - filtered_df_ana_jugadores['expected_assists'], palette='coolwarm', s=30, ax=ax) or ax.set(title="Asistencias vs Expected Asistencias (xA)", xlabel="Asistencias Esperadas (xA)", ylabel="Asistencias")),
-            ],
+        categorias_jugadores = {
+        
+        "Minutos y Partidos Jugados": [
+        ("Histograma de Partidos Jugados",
+        lambda ax: (
+        ax.set_title("Histograma de Partidos Jugados", fontsize=12, color='white', loc='center'),
+        sns.histplot(filtered_df_ana_jugadores['matches'], kde=True, color='blue', ax=ax),
+        ax.set(xlabel="Número de Partidos", ylabel="Número de Jugadores")
+        )),
+        
+        ("Promedio de Minutos Jugados por Edad", 
+        lambda ax: (
+        ax.set_title("Promedio de Minutos Jugados por Edad", fontsize=12, color='white', loc='center'),
+        sns.lineplot(
+        x=filtered_df_ana_jugadores.groupby('age')['minutes'].mean().index, 
+        y=filtered_df_ana_jugadores.groupby('age')['minutes'].mean().values, 
+        marker='o', color='darkorange', ax=ax
+        ),
+        ax.set(xlabel="Edad", ylabel="Minutos Jugados")
+        )),
+        
+        ],
+        
+        "Distribución de Jugadores": [
+        
+        ("Distribución de Posiciones", 
+        lambda ax: (
+        ax.set_title("Distribución de Posiciones", fontsize=12, color='white', loc='center'),
+        sns.countplot(
+        data=filtered_df_ana_jugadores, x='position',
+        order=filtered_df_ana_jugadores['position'].value_counts().index,
+        palette='Reds', ax=ax
+        ),
+        ax.set(xlabel="Posición", ylabel="Frecuencia"),
+        ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+        )),
+        
+        ("Distribución de Formaciones",
+        lambda ax: (
+        ax.set_title("Distribución de Formaciones", fontsize=12, color='white', loc='center'),
+        sns.countplot(
+        data=filtered_df_ana_jugadores, x='formation',
+        order=filtered_df_ana_jugadores['formation'].value_counts().index,
+        palette='PuBuGn', ax=ax
+        ),
+        ax.set(xlabel="Formación", ylabel="Frecuencia"),
+        ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+        )),
+        
+        ("Top 15 Número de Jugadores por País",
+        lambda ax: (
+        ax.set_title("Número de Jugadores por País", fontsize=12, color='white', loc='center'),
+        sns.barplot(
+        y=filtered_df_ana_jugadores['nation'].value_counts().head(15).index, 
+        x=filtered_df_ana_jugadores['nation'].value_counts().head(15).values,
+        color='blue', ax=ax
+        ),
+        ax.set(xlabel="Número de Jugadores", ylabel="País"),
+        ax.set_yticklabels(ax.get_yticklabels(), fontsize=6)
+        )),
+        
+        ],
+        
+        "Goles y Asistencias": [
+        
+        ("Histograma de Goles por Posición", 
+        lambda ax: (
+        ax.set_title("Histograma de Goles por Posición", fontsize=12, color='white', loc='center'),
+        sns.histplot(
+        data=filtered_df_ana_jugadores, x='goals', hue='position', bins=20, alpha=0.7, ax=ax
+        ),
+        ax.set(xlabel="Número de Goles", ylabel="Frecuencia")
+        )),
+        
+        ("Histograma de Asistencias por Posición",
+        lambda ax: (
+        ax.set_title("Histograma de Asistencias por Posición", fontsize=12, color='white', loc='center'),
+        sns.histplot(
+        data=filtered_df_ana_jugadores, x='assists', hue='position', bins=20, alpha=0.7, ax=ax
+        ),
+        ax.set(xlabel="Número de Asistencias", ylabel="Frecuencia")
+        )),
+        
+        ("Distribución de Asistencias",
+        lambda ax: (
+        ax.set_title("Distribución de Asistencias", fontsize=12, color='white', loc='center'),
+        sns.histplot(
+        filtered_df_ana_jugadores['assists'], kde=True, color='red', bins=20, ax=ax
+        ),
+        ax.set(xlabel="Número de Asistencias", ylabel="Número de Jugadores")
+        )),
+        
+        ("Asistencias por Posición",
+        lambda ax: (
+        ax.set_title("Asistencias por Posición", fontsize=12, color='white', loc='center'),
+        sns.barplot(
+        x=filtered_df_ana_jugadores.groupby('position')['assists'].mean().index,
+        y=filtered_df_ana_jugadores.groupby('position')['assists'].mean().values,
+        color='orange', ax=ax
+        ),
+        ax.set(xlabel="Posición", ylabel="Asistencias")
+        )),
+        
+        ("Goles por Posición",
+        lambda ax: (
+        ax.set_title("Goles por Posición", fontsize=12, color='white', loc='center'),
+        sns.barplot(
+        x=filtered_df_ana_jugadores.groupby('position')['goals'].mean().index,
+        y=filtered_df_ana_jugadores.groupby('position')['goals'].mean().values,
+        color='blue', ax=ax
+        ),
+        ax.set(xlabel="Posición", ylabel="Goles")
+        )),
+        ],
+        
+        "Disciplina: Tarjetas y Faltas": [
+        
+        ("Histograma de Tarjetas Amarillas por Posición",
+        lambda ax: (
+        ax.set_title("Histograma de Tarjetas Amarillas por Posición", fontsize=12, color='white', loc='center'),
+        sns.histplot(
+        data=filtered_df_ana_jugadores, x='yellow_cards', hue='position', bins=20, alpha=0.7, ax=ax
+        ),
+        ax.set(xlabel="Número de Tarjetas", ylabel="Frecuencia")
+        )),
+        
+        ("Histograma de Tarjetas Rojas por Posición",
+        lambda ax: (
+        ax.set_title("Histograma de Tarjetas Rojas por Posición", fontsize=12, color='white', loc='center'),
+        sns.histplot(
+        data=filtered_df_ana_jugadores, x='red_cards', hue='position', bins=20, alpha=0.7, ax=ax
+        ),
+        ax.set(xlabel="Número de Tarjetas", ylabel="Frecuencia")
+        )),
+        
+        ("Tarjetas Rojas por Posición",
+        lambda ax: (
+        ax.set_title("Tarjetas Rojas por Posición", fontsize=12, color='white', loc='center'),
+        sns.barplot(
+        x=filtered_df_ana_jugadores.groupby('position')['red_cards'].mean().index,
+        y=filtered_df_ana_jugadores.groupby('position')['red_cards'].mean().values,
+        color='red', ax=ax
+        ),
+        ax.set(xlabel="Posición", ylabel="Tarjetas Rojas")
+        )),
+        
+        ("Tarjetas Amarillas por Posición",
+        lambda ax: (
+        ax.set_title("Tarjetas Amarillas por Posición", fontsize=12, color='white', loc='center'),
+        sns.barplot(
+        x=filtered_df_ana_jugadores.groupby('position')['yellow_cards'].mean().index,
+        y=filtered_df_ana_jugadores.groupby('position')['yellow_cards'].mean().values,
+        color='gold', ax=ax
+        ),
+        ax.set(xlabel="Posición", ylabel="Tarjetas Amarillas")
+        )),
+        ],
+        
+        "Análisis y Correlaciones": [
+        ("Mapa de Calor de Correlaciones Generales",
+        lambda ax: (
+        ax.set_title("Mapa de Calor de Correlaciones Generales", fontsize=12, color='white', loc='center'),
+        sns.heatmap(
+        filtered_df_ana_jugadores.corr(numeric_only=True), annot=True, fmt='.1f', cmap='RdBu', annot_kws={"size": 4}, ax=ax
+        )
+        )),
+        
+        ("Mapa de Calor de Expected Goals y Expected Assists",
+        lambda ax: (
+        ax.set_title("Mapa de Calor de xG y xA", fontsize=12, color='white', loc='center'),
+        sns.heatmap(
+        filtered_df_ana_jugadores[['goals', 'assists', 'expected_goals', 'expected_assists']].corr(),
+        annot=True, fmt='.1f', cmap='RdBu', annot_kws={"size": 6}, ax=ax
+        )
+        )),
+        
+        ("Scatterplot: Goles vs Expected Goals (xG)",
+        lambda ax: (
+        ax.set_title("Goles vs Expected Goals (xG)", fontsize=12, color='white', loc='center'),
+        sns.scatterplot(
+        x=filtered_df_ana_jugadores['expected_goals'],
+        y=filtered_df_ana_jugadores['goals'],
+        hue=filtered_df_ana_jugadores['goals'] - filtered_df_ana_jugadores['expected_goals'],
+        palette='coolwarm', s=30, ax=ax
+        ),
+        ax.set(xlabel="Goles Esperados (xG)", ylabel="Goles")
+        )),
+        
+        ("Scatterplot: Asistencias vs Expected Asistencias (xA)",
+        lambda ax: (
+        ax.set_title("Asistencias vs Expected Asistencias (xA)", fontsize=12, color='white', loc='center'),
+        sns.scatterplot(
+        x=filtered_df_ana_jugadores['expected_assists'],
+        y=filtered_df_ana_jugadores['assists'],
+        hue=filtered_df_ana_jugadores['assists'] - filtered_df_ana_jugadores['expected_assists'],
+        palette='coolwarm', s=30, ax=ax
+        ),
+        ax.set(xlabel="Asistencias Esperadas (xA)", ylabel="Asistencias")
+        )),
+        ],
         }
 
         # Mostrar gráficos
