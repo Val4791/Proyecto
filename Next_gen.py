@@ -497,7 +497,7 @@ for cat_name, graficos in categorias.items():
 # ----------------------------------------
 # Pestaña: "Jugadores"
 # ----------------------------------------
-elif selected_page == "Jugadores":
+    elif selected_page == "Jugadores":
     st.markdown("<div class='title-container'>Analítica Jugadores</div>", unsafe_allow_html=True) # Title from the new code
     st.markdown("<hr>", unsafe_allow_html=True)
 
