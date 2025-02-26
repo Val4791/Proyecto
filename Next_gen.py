@@ -467,31 +467,32 @@ if selected_page == "Analítica":
             ],
         }
 
-# Mostrar los gráficos según la categoría
-for cat_name, graficos in categorias.items():
-    if cat_name in selected_categories:
-        st.markdown(f"### 🔹 {cat_name}")
-        cols_cats = st.columns(2)
+        # Mostrar los gráficos según la categoría
+        for cat_name, graficos in categorias.items():
+            if cat_name in selected_categories:
+                st.markdown(f"### 🔹 {cat_name}")
+                cols_cats = st.columns(2)
 
-        for idx, (titulo, plot_func) in enumerate(graficos):
-            with cols_cats[idx % 2]:
-                st.markdown(f"#### {titulo}")
+                for idx, (titulo, plot_func) in enumerate(graficos):
+                    with cols_cats[idx % 2]:
+                        st.markdown(f"#### {titulo}")xº
 
-                if filtered_df_ana.empty:
-                    st.warning("No hay valores disponibles para el rango seleccionado.")
-                elif len(filtered_df_ana) > 1:
-                    fig, ax = plt.subplots(figsize=(4, 3))
-                    ax.set_facecolor('black')
-                    ax.tick_params(colors='white', labelsize=8)
-                    ax.title.set_color('white')
+                        if filtered_df_ana.empty:
+                            st.warning("No hay valores disponibles para el rango seleccionado.")
+                        elif len(filtered_df_ana) > 1:
+                            fig, ax = plt.subplots(figsize=(4, 3))
+                             ax.set_facecolor('black')
+                             ax.tick_params(colors='white', labelsize=8)
+                             ax.title.set_color('white')
 
-                    try:
-                        plot_func(ax)
+                             try:
+                                plot_func(ax)
+                                
                         # 🔹 Título en blanco y centrado antes del gráfico
-                        st.markdown(f"<h4 style='color: white; text-align: center;'>{titulo}</h4>", unsafe_allow_html=True)
-                        st.pyplot(fig)
-                    except Exception as e:
-                        st.error(f"No se pudo generar el gráfico: {str(e)}")
+                                st.markdown(f"<h4 style='color: white; text-align: center;'>{titulo}</h4>", unsafe_allow_html=True)
+                                st.pyplot(fig)
+                            except Exception as e:
+                                st.error(f"No se pudo generar el gráfico: {str(e)}")
 
 
 # ----------------------------------------
