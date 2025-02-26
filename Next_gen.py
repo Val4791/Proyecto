@@ -895,9 +895,13 @@ elif selected_page == "Recomendador":
             (df_skills['age'].between(age_range[0], age_range[1])) &
             (df_skills['height'].between(height_range[0], height_range[1]))
         ]
-            
+        
         if "Todos" not in position_options:
-            filtered_similar_players = filtered_similar_players[filtered_similar_players['position'].isin(position_options)]
+        filtered_similar_players = filtered_similar_players.merge(
+        df_skills[['name', 'position']], on='name', how='left'
+        )
+        filtered_similar_players = filtered_similar_players[filtered_similar_players['position'].isin(position_options)]
+
         if "Todos" not in nationality_options:
             filtered_similar_players = filtered_similar_players[filtered_similar_players['nationality'].isin(nationality_options)]
         if preferred_foot == "Izquierda":
