@@ -808,8 +808,9 @@ elif selected_page == "Jugadores":
         hue=filtered_df_ana_jugadores['assists'] - filtered_df_ana_jugadores['expected_assists'],
         palette='coolwarm', s=30, ax=ax
         ),
-        ax.set(xlabel="Asistencias Esperadas (xA)", ylabel="Asistencias")
-        )),
+        ax.set_xlabel("Asistencias Esperadas (xA)"),
+        ax.set_ylabel("Asistencias")
+        ))
         ],
         }
 
