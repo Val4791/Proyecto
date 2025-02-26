@@ -516,20 +516,24 @@ if selected_page == "Analítica":
         ax.set_title("Jugadores con mayor salario") or ax.grid(axis='x', linestyle='--', alpha=0.7)),
         
         ("Media de Valor de Mercado por Edad",
-        lambda ax: sns.lineplot(
+        lambda ax: (
+        ax.set_title("Media de Valor de Mercado por Edad", fontsize=12, color='white', loc='center'),
+        sns.lineplot(
         x=filtered_df_ana.groupby('age')['value_million_euro'].mean().index,
         y=filtered_df_ana.groupby('age')['value_million_euro'].mean().values,
         marker='o', color='grey', ax=ax
+        )
         )),
         
         ("Media de Salario por Edad",
-        lambda ax: sns.lineplot(
+        lambda ax: (
+        ax.set_title("Media de Salario por Edad", fontsize=12, color='white', loc='center'),
+        sns.lineplot(
         x=filtered_df_ana.groupby('age')['wage_million_euro'].mean().index,
         y=filtered_df_ana.groupby('age')['wage_million_euro'].mean().values,
         marker='o', color='blue', ax=ax
+        )
         )),
-        
-        ],
         
         }
 
