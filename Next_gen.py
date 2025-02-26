@@ -331,140 +331,206 @@ if selected_page == "Analítica":
         plt.style.use('dark_background')
 
         categorias = {
-            "Rendimiento y Habilidades": [
-                ("Top 10 Jugadores con Mayor Overall",
-                 lambda ax: sns.barplot(
-                     x='overall', y='name',
-                     data=filtered_df_ana.sort_values(by='overall', ascending=False).head(10),
-                     palette='viridis', ax=ax
-                 )),
-                ("Top 10 Jugadores con Mayor Potencial",
-                 lambda ax: sns.barplot(
-                     x='potential', y='name',
-                     data=filtered_df_ana.sort_values(by='potential', ascending=False).head(10),
-                     palette='viridis', ax=ax
-                 )),
-                ("Comparación de Media de Finalización y Disparo por Edad",
-                 lambda ax: sns.lineplot(
-                     x=filtered_df_ana.groupby('age')['finishing'].mean().index,
-                     y=filtered_df_ana.groupby('age')['finishing'].mean().values,
-                     marker='o', color='blue', ax=ax
-                 ) or sns.lineplot(
-                     x=filtered_df_ana.groupby('age')['shooting_total'].mean().index,
-                     y=filtered_df_ana.groupby('age')['shooting_total'].mean().values,
-                     marker='o', label='Shooting', color='green', ax=ax
-                 )),
-                ("Media de Ritmo de Juego por Edad",
-                 lambda ax: sns.lineplot(
-                     x=filtered_df_ana.groupby('age')['pace_total'].mean().index,
-                     y=filtered_df_ana.groupby('age')['pace_total'].mean().values,
-                     marker='o', color='purple', ax=ax
-                 )),
-                ("Media de Visión de Juego por Edad",
-                 lambda ax: sns.lineplot(
-                     x=filtered_df_ana.groupby('age')['vision'].mean().index,
-                     y=filtered_df_ana.groupby('age')['vision'].mean().values,
-                     marker='o', color='brown', ax=ax
-                 )),
-                ("Media de Fuerza por Edad",
-                 lambda ax: sns.lineplot(
-                     x=filtered_df_ana.groupby('age')['strength'].mean().index,
-                     y=filtered_df_ana.groupby('age')['strength'].mean().values,
-                     marker='o', color='orange', ax=ax
-                 )),
-            ],
-
-            "Análisis Comparativo y Correlaciones": [
-                ("Mapa de Calor de Correlaciones (Habilidades Seleccionadas)",
-                 lambda ax: (
-                     sns.heatmap(
-                         filtered_df_ana[[
-                             'overall','finishing','heading_accuracy','ball_control','balance','shot_power',
-                             'strength','long_shots','aggression','positioning','vision','penalties',
-                             'mentality','speed','passing'
-                         ]].corr(),
-                         annot=True, fmt=".2f", cmap='RdBu', ax=ax, annot_kws={"size":3}
-                     ),
-                     ax.tick_params(axis='x', labelsize=5),
-                     ax.tick_params(axis='y', labelsize=5),
-                     ax.set_title("Mapa de Calor de Correlaciones (Habilidades Seleccionadas)", fontsize=5)
-                 )),
-                ("Relación entre Overall y Potential",
-                 lambda ax: sns.scatterplot(
-                     data=filtered_df_ana, x='overall', y='potential',
-                     hue='age', palette='viridis', ax=ax
-                 )),
-                ("Tendencia de Puntuación Total según la Edad",
-                 lambda ax: sns.regplot(
-                     data=filtered_df_ana, x='age', y='overall',
-                     line_kws={"color":"red"}, ax=ax
-                 )),
-                ("Tendencia de Potencial según la Edad",
-                 lambda ax: sns.regplot(
-                     data=filtered_df_ana, x='age', y='potential',
-                     line_kws={"color":"red"}, ax=ax
-                 )),
-                ("Media del Score Defensivo y Ofensivo por Edad",
-                 lambda ax: sns.lineplot(
-                     x=filtered_df_ana.groupby('age')['defending_total'].mean().index,
-                     y=filtered_df_ana.groupby('age')['defending_total'].mean().values,
-                     marker='o', color='blue', ax=ax
-                 ) or sns.lineplot(
-                     x=filtered_df_ana.groupby('age')['shooting_total'].mean().index,
-                     y=filtered_df_ana.groupby('age')['shooting_total'].mean().values,
-                     marker='o', label='Offensive Score', color='orange', ax=ax
-                 ))
-            ],
-
-            "Distribución de Características": [
-                ("Distribución de Edad",
-                 lambda ax: sns.countplot(x='age', data=filtered_df_ana, width=0.3, ax=ax) or
-                 [ax.bar_label(b, color='white') for b in ax.containers] or
-                 ax.tick_params(axis='x', labelsize=1)),
-                ("Distribución por Altura (cm)",
-                 lambda ax: sns.countplot(x='height', data=filtered_df_ana, width=0.3, ax=ax, color='orange') or
-                 ax.tick_params(axis='x', labelsize=6) or
-                 [ax.bar_label(b, color='white') for b in ax.containers]),
-                ("Distribución de la Puntuación General",
-                 lambda ax: sns.histplot(filtered_df_ana['overall'], kde=True, bins=25, color='blue', ax=ax)),
-                ("Distribución de la Puntuación de Potencial",
-                 lambda ax: sns.histplot(filtered_df_ana['potential'], kde=True, bins=25, color='brown', ax=ax)),
-                ("Distribución de Posiciones",
-                 lambda ax: sns.countplot(
-                     data=filtered_df_ana, x='position',
-                     order=filtered_df_ana['position'].value_counts().index,
-                     palette='magma', ax=ax
-                 ) or ax.set_xticklabels(ax.get_xticklabels(), rotation=30)),
-            ],
-
-            "Valor y Salario de Jugadores": [
-                ("Jugadores con Mayor Valor de Mercado (Millones de Euros)",
-                 lambda ax: ax.barh(
-                     filtered_df_ana.sort_values('value_million_euro', ascending=False).head(10)['name'][::-1],
-                     filtered_df_ana.sort_values('value_million_euro', ascending=False).head(10)['value_million_euro'][::-1],
-                     color='purple'
-                 ) or ax.set(xlabel="Valor en Millones de Euros", ylabel="Jugador") or
-                 ax.set_title("Jugadores con mayor valor de mercado") or ax.grid(axis='x', linestyle='--', alpha=0.7)),
-                ("Jugadores con Mayor Salario (Millones de Euros)",
-                 lambda ax: ax.barh(
-                     filtered_df_ana.sort_values('wage_million_euro', ascending=False).head(10)['name'][::-1],
-                     filtered_df_ana.sort_values('wage_million_euro', ascending=False).head(10)['wage_million_euro'][::-1],
-                     color='darkorange'
-                 ) or ax.set(xlabel="Salario en Millones de Euros", ylabel="Jugador") or
-                 ax.set_title("Jugadores con mayor salario") or ax.grid(axis='x', linestyle='--', alpha=0.7)),
-                ("Media de Valor de Mercado por Edad",
-                 lambda ax: sns.lineplot(
-                     x=filtered_df_ana.groupby('age')['value_million_euro'].mean().index,
-                     y=filtered_df_ana.groupby('age')['value_million_euro'].mean().values,
-                     marker='o', color='grey', ax=ax
-                 )),
-                ("Media de Salario por Edad",
-                 lambda ax: sns.lineplot(
-                     x=filtered_df_ana.groupby('age')['wage_million_euro'].mean().index,
-                     y=filtered_df_ana.groupby('age')['wage_million_euro'].mean().values,
-                     marker='o', color='blue', ax=ax
-                 )),
-            ],
+        "Rendimiento y Habilidades": [
+        ("Top 10 Jugadores con Mayor Overall",
+        lambda ax: (
+        ax.set_title("Top 10 Jugadores con Mayor Overall", fontsize=12, color='white'),
+        sns.barplot(
+        x='overall', y='name',
+        data=filtered_df_ana.sort_values(by='overall', ascending=False).head(10),
+        palette='viridis', ax=ax
+        )
+        )),
+        
+        ("Top 10 Jugadores con Mayor Potencial",
+        lambda ax: (
+        ax.set_title("Top 10 Jugadores con Mayor Potencial", fontsize=12, color='white'),
+        sns.barplot(
+        x='potential', y='name',
+        data=filtered_df_ana.sort_values(by='potential', ascending=False).head(10),
+        palette='viridis', ax=ax
+        )
+        )),
+        
+        ("Comparación de Media de Finalización y Disparo por Edad",
+        lambda ax: (
+        ax.set_title("Comparación de Media de Finalización y Disparo por Edad", fontsize=12, color='white'),
+        sns.lineplot(
+        x=filtered_df_ana.groupby('age')['finishing'].mean().index,
+        y=filtered_df_ana.groupby('age')['finishing'].mean().values,
+        marker='o', color='blue', ax=ax
+        ),
+        sns.lineplot(
+        x=filtered_df_ana.groupby('age')['shooting_total'].mean().index,
+        y=filtered_df_ana.groupby('age')['shooting_total'].mean().values,
+        marker='o', label='Shooting', color='green', ax=ax
+        )
+        )),
+        
+        ("Media de Ritmo de Juego por Edad",
+        lambda ax: (
+        ax.set_title("Media de Ritmo de Juego por Edad", fontsize=12, color='white'),
+        sns.lineplot(
+        x=filtered_df_ana.groupby('age')['pace_total'].mean().index,
+        y=filtered_df_ana.groupby('age')['pace_total'].mean().values,
+        marker='o', color='purple', ax=ax
+        )
+        )),
+        
+        ("Media de Visión de Juego por Edad",
+        lambda ax: (
+        ax.set_title("Media de Visión de Juego por Edad", fontsize=12, color='white'),
+        sns.lineplot(
+        x=filtered_df_ana.groupby('age')['vision'].mean().index,
+        y=filtered_df_ana.groupby('age')['vision'].mean().values,
+        marker='o', color='brown', ax=ax
+        )
+        )),
+        
+        ("Media de Fuerza por Edad",
+        lambda ax: (
+        ax.set_title("Media de Fuerza por Edad", fontsize=12, color='white'),
+        sns.lineplot(
+        x=filtered_df_ana.groupby('age')['strength'].mean().index,
+        y=filtered_df_ana.groupby('age')['strength'].mean().values,
+        marker='o', color='orange', ax=ax
+        )
+        )),
+        ],
+        
+        "Análisis Comparativo y Correlaciones": [
+        ("Mapa de Calor de Correlaciones (Habilidades Seleccionadas)",
+        lambda ax: (
+        ax.set_title("Mapa de Calor de Correlaciones (Habilidades Seleccionadas)", fontsize=12, color='white'),
+        sns.heatmap(
+        filtered_df_ana[[
+        'overall','finishing','heading_accuracy','ball_control','balance','shot_power',
+        'strength','long_shots','aggression','positioning','vision','penalties',
+        'mentality','speed','passing'
+        ]].corr(),
+        annot=True, fmt=".2f", cmap='RdBu', ax=ax, annot_kws={"size":3}
+        ),
+        ax.tick_params(axis='x', labelsize=5),
+        ax.tick_params(axis='y', labelsize=5)
+        )),
+        
+        ("Relación entre Overall y Potential",
+        lambda ax: (
+        ax.set_title("Relación entre Overall y Potential", fontsize=12, color='white'),
+        sns.scatterplot(
+        data=filtered_df_ana, x='overall', y='potential',
+        hue='age', palette='viridis', ax=ax)
+        )),
+        
+        ("Tendencia de Puntuación Total según la Edad",
+        lambda ax: (
+        ax.set_title("Tendencia de Puntuación Total según la Edad", fontsize=12, color='white'),
+        sns.regplot(
+        data=filtered_df_ana, x='age', y='overall',
+        line_kws={"color":"red"}, ax=ax
+        )
+        )),
+        
+        ("Tendencia de Potencial según la Edad",
+        lambda ax: (
+        ax.set_title("Tendencia de Potencial según la Edad", fontsize=12, color='white'),
+        sns.regplot(
+        data=filtered_df_ana, x='age', y='potential',
+        line_kws={"color":"red"}, ax=ax
+        )
+        )),
+        
+        ("Media del Score Defensivo y Ofensivo por Edad",
+        lambda ax: (
+        ax.set_title("Media del Score Defensivo y Ofensivo por Edad", fontsize=12, color='white'),
+        sns.lineplot(
+        x=filtered_df_ana.groupby('age')['defending_total'].mean().index,
+        y=filtered_df_ana.groupby('age')['defending_total'].mean().values,
+        marker='o', color='blue', ax=ax
+        ),
+        sns.lineplot(
+        x=filtered_df_ana.groupby('age')['shooting_total'].mean().index,
+        y=filtered_df_ana.groupby('age')['shooting_total'].mean().values,
+        marker='o', label='Offensive Score', color='orange', ax=ax
+        )
+        ))
+        ],
+        
+        "Distribución de Características": [
+        
+        ("Distribución de Edad",
+        lambda ax: (
+        ax.set_title("Distribución de Edad", fontsize=12, color='white'),
+        sns.countplot(x='age', data=filtered_df_ana, width=0.3, ax=ax),
+        [ax.bar_label(b, color='white') for b in ax.containers],
+        ax.tick_params(axis='x', labelsize=1)
+        )),
+        
+        ("Distribución por Altura (cm)",
+        lambda ax: (
+        ax.set_title("Distribución por Altura (cm)", fontsize=12, color='white'),
+        sns.countplot(x='height', data=filtered_df_ana, width=0.3, ax=ax, color='orange'),
+        ax.tick_params(axis='x', labelsize=6),
+        [ax.bar_label(b, color='white') for b in ax.containers]
+        )),
+        
+        ("Distribución de la Puntuación General",
+        lambda ax: (
+        ax.set_title("Distribución de la Puntuación General", fontsize=12, color='white'),
+        sns.histplot(filtered_df_ana['overall'], kde=True, bins=25, color='blue', ax=ax)
+        )),
+        
+        ("Distribución de la Puntuación de Potencial",
+        lambda ax: (
+        ax.set_title("Distribución de la Puntuación de Potencial", fontsize=12, color='white'),
+        sns.histplot(filtered_df_ana['potential'], kde=True, bins=25, color='brown', ax=ax)
+        )),
+        
+        ("Distribución de Posiciones",
+        lambda ax: (
+        ax.set_title("Distribución de Posiciones", fontsize=12, color='white'),
+        sns.countplot(
+        data=filtered_df_ana, x='position',
+        order=filtered_df_ana['position'].value_counts().index,
+        palette='magma', ax=ax
+        ),
+        ax.set_xticklabels(ax.get_xticklabels(), rotation=30)
+        )),
+        ],
+        
+        "Valor y Salario de Jugadores": [
+        
+        ("Jugadores con Mayor Valor de Mercado (Millones de Euros)",
+        lambda ax: ax.barh(
+        filtered_df_ana.sort_values('value_million_euro', ascending=False).head(10)['name'][::-1],
+        filtered_df_ana.sort_values('value_million_euro', ascending=False).head(10)['value_million_euro'][::-1],
+        color='purple') or ax.set(xlabel="Valor en Millones de Euros", ylabel="Jugador") or
+        ax.set_title("Jugadores con mayor valor de mercado") or ax.grid(axis='x', linestyle='--', alpha=0.7)),
+        
+        ("Jugadores con Mayor Salario (Millones de Euros)",
+        lambda ax: ax.barh(
+        filtered_df_ana.sort_values('wage_million_euro', ascending=False).head(10)['name'][::-1],
+        filtered_df_ana.sort_values('wage_million_euro', ascending=False).head(10)['wage_million_euro'][::-1],
+        color='darkorange'
+        ) or ax.set(xlabel="Salario en Millones de Euros", ylabel="Jugador") or
+        ax.set_title("Jugadores con mayor salario") or ax.grid(axis='x', linestyle='--', alpha=0.7)),
+        
+        ("Media de Valor de Mercado por Edad",
+        lambda ax: sns.lineplot(
+        x=filtered_df_ana.groupby('age')['value_million_euro'].mean().index,
+        y=filtered_df_ana.groupby('age')['value_million_euro'].mean().values,
+        marker='o', color='grey', ax=ax
+        )),
+        
+        ("Media de Salario por Edad",
+        lambda ax: sns.lineplot(
+        x=filtered_df_ana.groupby('age')['wage_million_euro'].mean().index,
+        y=filtered_df_ana.groupby('age')['wage_million_euro'].mean().values,
+        marker='o', color='blue', ax=ax
+        )),
+        
+        ],
+        
         }
 
         # Mostrar los gráficos según la categoría
