@@ -488,6 +488,11 @@ if selected_page == "Analítica":
                             try:
                                 plot_func(ax)
                                 st.pyplot(fig)
+                                
+                                # 🔹 Título en blanco y centrado antes del gráfico
+                                st.markdown(f"<h4 style='color: white; text-align: center;'>{titulo}</h4>", unsafe_allow_html=True)
+                                st.pyplot(fig)
+                                
                             except Exception as e:
                                 st.error(f"No se pudo generar el gráfico: {str(e)}")
 
@@ -592,6 +597,11 @@ elif selected_page == "Jugadores":
                             try:
                                 funcion(ax)
                                 st.pyplot(fig)
+
+                                # 🔹 Título en blanco y centrado antes del gráfico
+                                st.markdown(f"<h4 style='color: white; text-align: center;'>{titulo}</h4>", unsafe_allow_html=True)
+                                st.pyplot(fig)
+                                
                             except Exception as e:
                                 st.error(f"No se pudo generar el gráfico: {str(e)}")
 
