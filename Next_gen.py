@@ -247,7 +247,12 @@ if selected_page == "Analítica":
     with tab1:
         st.markdown("<div class='title-container'>Analítica</div>", unsafe_allow_html=True)
         st.markdown("<hr>", unsafe_allow_html=True)
-
+        
+        fig, ax = plt.subplots()
+        sns.histplot(df_skills_ana['overall'], bins=20, kde=True, ax=ax)
+        ax.set_title("Distribución de Overall de Jugadores")  # Mostrar nombre del gráfico
+        st.pyplot(fig)
+        
         # Cargar dataset
         skills_file_path = r'skills_resultado.csv'
         df_skills_ana = pd.read_csv(skills_file_path)
@@ -515,6 +520,11 @@ elif selected_page == "Jugadores":
     with tab1:
         st.markdown("<div class='title-container'>Analítica Jugadores</div>", unsafe_allow_html=True) # Title from the new code
         st.markdown("<hr>", unsafe_allow_html=True)
+
+        fig, ax = plt.subplots()
+        sns.histplot(df_players['age'], bins=20, kde=True, ax=ax)
+        ax.set_title("Distribución de Edad de Jugadores")  # Mostrar nombre del gráfico
+        st.pyplot(fig)
 
         # Cargar dataset for Jugadores tab - using the path from the new code
         file_path = r'players_cleaned.csv'
