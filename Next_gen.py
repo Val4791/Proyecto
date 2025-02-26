@@ -399,9 +399,9 @@ if selected_page == "Analítica":
         ],
         
         "Análisis Comparativo y Correlaciones": [
-        ("Mapa de Calor de Correlaciones (Habilidades Seleccionadas)",
+        ("Mapa de Calor de Correlaciones",
         lambda ax: (
-        ax.set_title("Mapa de Calor de Correlaciones (Habilidades Seleccionadas)", fontsize=12, color='white'),
+        ax.set_title("Mapa de Calor de Correlaciones", fontsize=12, color='white'),
         sns.heatmap(
         filtered_df_ana[[
         'overall','finishing','heading_accuracy','ball_control','balance','shot_power',
@@ -422,27 +422,27 @@ if selected_page == "Analítica":
         hue='age', palette='viridis', ax=ax)
         )),
         
-        ("Tendencia de Puntuación Total según la Edad",
+        ("Tendencia de Puntuación Total",
         lambda ax: (
-        ax.set_title("Tendencia de Puntuación Total según la Edad", fontsize=12, color='white'),
+        ax.set_title("Tendencia de Puntuación Total", fontsize=12, color='white'),
         sns.regplot(
         data=filtered_df_ana, x='age', y='overall',
         line_kws={"color":"red"}, ax=ax
         )
         )),
         
-        ("Tendencia de Potencial según la Edad",
+        ("Tendencia de Potencial",
         lambda ax: (
-        ax.set_title("Tendencia de Potencial según la Edad", fontsize=12, color='white'),
+        ax.set_title("Tendencia de Potencial", fontsize=12, color='white'),
         sns.regplot(
         data=filtered_df_ana, x='age', y='potential',
         line_kws={"color":"red"}, ax=ax
         )
         )),
         
-        ("Media del Score Defensivo y Ofensivo por Edad",
+        ("Media del Score Defensivo y Ofensivo",
         lambda ax: (
-        ax.set_title("Media del Score Defensivo y Ofensivo por Edad", fontsize=12, color='white'),
+        ax.set_title("Media del Score Defensivo y Ofensivo", fontsize=12, color='white'),
         sns.lineplot(
         x=filtered_df_ana.groupby('age')['defending_total'].mean().index,
         y=filtered_df_ana.groupby('age')['defending_total'].mean().values,
