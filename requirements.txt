@@ -6,4 +6,4 @@ fuzzywuzzy[speedup]
 Pillow
 scikit-learn
 seaborn
-git+https://github.com/groq/groq-api.git
+groq
